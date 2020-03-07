@@ -29,3 +29,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### HSQL ###
+hsqldb-1920-310-1920-313/
