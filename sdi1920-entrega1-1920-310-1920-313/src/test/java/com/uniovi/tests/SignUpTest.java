@@ -19,8 +19,8 @@ public class SignUpTest {
 	
 	// En Windows (Debe ser la versiÃ³n 65.0.1 y desactivar las actualizacioens
 	// automÃ¡ticas)):
-	static String PathFirefox65 = "H:\\Firefox 65\\firefox.exe";
-	static String Geckdriver024 = "C:\\Users\\angel\\git\\repository\\sdi1920-entrega1-1920-310-1920-313\\lib\\geckodriver024win64.exe";
+	static String PathFirefox65 = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+	static String Geckdriver024 = "C:\\Users\\angel\\git\\sdi1920-entrega1-1920-310-1920-313\\sdi1920-entrega1-1920-310-1920-313\\lib\\geckodriver024win64.exe";
 	// En MACOSX (Debe ser la versiÃ³n 65.0.1 y desactivar las actualizacioens
 	// automÃ¡ticas):
 	// static String PathFirefox65 =
