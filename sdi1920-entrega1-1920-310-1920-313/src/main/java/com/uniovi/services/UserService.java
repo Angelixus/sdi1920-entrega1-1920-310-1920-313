@@ -1,9 +1,12 @@
 package com.uniovi.services;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +19,21 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository usersRepository;
+	
+	@Autowired
+	private RolesService rolesService;
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
-
+	
 	public List<User> getUsers() {
 		List<User> users = new ArrayList<User>();
-		usersRepository.findAll().forEach(users::add);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		usersRepository.findAll().forEach(user -> {
+			if(!(user.getEmail().equals(auth.getName()) || user.getRole().equals(rolesService.getRoles()[1]))) {
+				users.add(user);
+			}
+		});
 		return users;
 	}
 
@@ -45,6 +56,22 @@ public class UserService {
 
 	public void addEncryptelessUser(User previous) {
 		usersRepository.save(previous);
+	}
+
+	public List<User> searchUsersByNameOrEmail(String searchText){
+		List<User> users = new ArrayList<User>();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		searchText = "%"+searchText+"%";
+		users = usersRepository.findByNameOrEmail(searchText);
+		
+		Iterator<User> it = users.iterator();
+		while(it.hasNext()) {
+			User user = it.next();
+			if(user.getEmail().equals(auth.getName()) || user.getRole().equals(rolesService.getRoles()[1])) {
+				it.remove();
+			}
+		}
+		return users;
 	}
 	
 }
