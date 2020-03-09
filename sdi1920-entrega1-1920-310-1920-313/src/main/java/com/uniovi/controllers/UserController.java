@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.uniovi.entities.User;
+import com.uniovi.services.RolesService;
+import com.uniovi.services.SecurityService;
 import com.uniovi.services.UserService;
 import com.uniovi.validators.SignUpFormValidator;
 
@@ -23,6 +25,12 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private RolesService rolesService;
+	
+	@Autowired
+	private SecurityService securityService;
+	
 	@RequestMapping(value="/signup")
 	public String signup(Model model) {
 		model.addAttribute("user", new User());
@@ -34,11 +42,12 @@ public class UserController {
 		signUpFormValidator.validate(user, result);
 		if(result.hasErrors())
 			return "signup";
-		// No roles yet
-		userService.addUser(user);
-		// autologin not yet
 		
-		return "redirect:/";
+		user.setRole(rolesService.getRoles()[0]);
+		userService.addUser(user);
+		securityService.autoLogin(user.getEmail(), user.getPasswordConfirm());
+		
+		return "redirect:home";
 	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)

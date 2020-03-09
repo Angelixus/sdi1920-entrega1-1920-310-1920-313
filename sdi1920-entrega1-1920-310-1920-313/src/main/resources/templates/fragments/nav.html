@@ -10,6 +10,25 @@
 			<a href="/"><img src="/img/icons8-website-64.png" alt="logo" /></a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
+				<li><a href="/">Home</a></li>
+				<li id="marks-menu" class="dropdown"><a class="dropdown-toogle"
+					data-toggle="dropdown" href="#" th:text="#{friends.message}"> <span
+						class="caret"></span>
+				</a>
+					<ul class="dropdown-menu" sec:authorize="isAuthenticated()">
+						<li><a href="/friends/list" th:text="#{friends.list}"></a></li>
+					</ul></li>
+				<li id="users-menu" class="dropdown"
+					><a
+					class="dropdown-toogle" data-toggle="dropdown" href="#"
+					th:text="#{users.message}"><span class="caret"></span> </a>
+					<ul class="dropdown-menu">
+						<li sec:authorize="hasRole('ROLE_ADMIN')">
+							<a href="/user/add" th:text="#{users.add}"></a></li>
+						<li><a href="/user/list" th:text="#{users.list}"></a></li>
+					</ul></li>
+			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a id="btnLanguage" href="#"
 					class="dropdown-toggle" data-toggle="dropdown" role="button"
