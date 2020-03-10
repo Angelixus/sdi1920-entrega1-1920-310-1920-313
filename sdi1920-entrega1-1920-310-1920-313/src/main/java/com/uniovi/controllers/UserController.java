@@ -57,7 +57,7 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(Model model, String error) {
 		if(error != null)
-			model.addAttribute("errors", "Email and/or password are invalid");
+			model.addAttribute("errors", true);
 		return "login";
 	}
 
