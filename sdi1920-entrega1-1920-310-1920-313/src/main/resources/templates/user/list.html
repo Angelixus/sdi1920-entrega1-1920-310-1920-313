@@ -36,6 +36,29 @@
 					<tr th:each="user: ${usersList}">
 						<td th:text="${user.email}">71888888X</td>
 						<td th:text="${user.name}">Nombre del usuario</td>
+						<td>						
+							<div th:if="${user.didRecieveRequestFromLogged() == false}">
+									<button type="button" th:id="${'sendRequestButton' + user.id}"
+										class="btn btn-info" th:text="#{userList.sendRequest}">Enviar Petición</button>
+									<script th:inline="javascript">
+									/*<![CDATA[*/
+									 $( "#sendRequestButton[[${user.id}]]" ).click(function() {
+									 $.get( "/user/[[${user.id}]]/send", function( data ) {
+									 var numberPage = [[${param.page}]];
+									 var urlUpdate = '/user/list/update';
+									 if ( numberPage != null ){
+									 urlUpdate += "?page="+numberPage[0];
+									 }
+									 $("#tableUsers").load(urlUpdate);
+									 });
+									 });
+									 /*]]>*/
+									</script>
+							</div>
+							<div th:if="${user.didRecieveRequestFromLogged() == true}">
+								<p th:text="#{userList.alreadySent}"></p>
+							</div>
+						</td>
 					</tr>
 				</tbody>
 			</table>

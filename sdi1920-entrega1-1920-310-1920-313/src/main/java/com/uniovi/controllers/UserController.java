@@ -6,15 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.uniovi.entities.User;
+import com.uniovi.services.FriendRequestService;
 import com.uniovi.services.RolesService;
 import com.uniovi.services.SecurityService;
 import com.uniovi.services.UserService;
@@ -31,6 +35,9 @@ public class UserController {
 	
 	@Autowired
 	private RolesService rolesService;
+	
+	@Autowired
+	private FriendRequestService friendRequestService;
 	
 	@Autowired
 	private SecurityService securityService;
@@ -78,6 +85,26 @@ public class UserController {
 		model.addAttribute("usersList", users.getContent());	
 		model.addAttribute("page", users);
 		return "user/list";
+	}
+	
+	@RequestMapping(value = "/user/list/update")
+	public String updateList(Model model, Pageable pageable) {
+		model.addAttribute("usersList", userService.getUsers(pageable).getContent());
+		return "user/list :: tableUsers";
+	}
+	
+	@RequestMapping(value = "/user/{id}/send", method = RequestMethod.GET)
+	public String setResendTrue(Model model, @PathVariable Long id) {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username = "";
+		if(principal instanceof UserDetails)
+			username = ((UserDetails)principal).getUsername();
+		else
+			username = principal.toString();
+		User userSender = userService.getUserByEmail(username);
+		User userReciever = userService.getUser(id);
+		friendRequestService.sendFriendRequest(userSender, userReciever);
+		return "redirect:/user/list";
 	}
 
 }
