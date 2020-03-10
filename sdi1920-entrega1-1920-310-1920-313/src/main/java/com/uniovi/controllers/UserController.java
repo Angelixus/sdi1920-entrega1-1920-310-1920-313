@@ -1,6 +1,11 @@
 package com.uniovi.controllers;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -62,14 +67,16 @@ public class UserController {
 	}
 
 	@RequestMapping("/user/list")
-	public String getListado(Model model, @RequestParam(value="",required = false) String searchText) {
-
+	public String getListado(Model model, Pageable pageable, @RequestParam(value="",required = false) String searchText) {
+		Page<User> users = new PageImpl<User>(new ArrayList<User>());
 		if (searchText != null && !searchText.isEmpty()) {
-			model.addAttribute("usersList", userService.searchUsersByNameOrEmail(searchText));
+			users = userService.searchUsersByNameOrEmail(pageable, searchText);
 		}else {
-			model.addAttribute("usersList", userService.getUsers());	
+			users = userService.getUsers(pageable);
 		}
 		
+		model.addAttribute("usersList", users.getContent());	
+		model.addAttribute("page", users);
 		return "user/list";
 	}
 

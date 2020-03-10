@@ -2,9 +2,11 @@ package com.uniovi.services;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,14 +28,10 @@ public class UserService {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-	public List<User> getUsers() {
-		List<User> users = new ArrayList<User>();
+	public Page<User> getUsers(Pageable pageable) {
+		Page<User> users = new PageImpl<User>(new ArrayList<User>());
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		usersRepository.findAll().forEach(user -> {
-			if(!(user.getEmail().equals(auth.getName()) || user.getRole().equals(rolesService.getRoles()[1]))) {
-				users.add(user);
-			}
-		});
+		users = usersRepository.findAllExceptUserAndAdmin(pageable, auth.getName(), rolesService.getRoles()[1]);
 		return users;
 	}
 
@@ -58,11 +56,11 @@ public class UserService {
 		usersRepository.save(previous);
 	}
 
-	public List<User> searchUsersByNameOrEmail(String searchText){
-		List<User> users = new ArrayList<User>();
+	public Page<User> searchUsersByNameOrEmail(Pageable pageable, String searchText){
+		Page<User> users = new PageImpl<User>(new ArrayList<User>());
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		searchText = "%"+searchText+"%";
-		users = usersRepository.findByNameOrEmail(searchText);
+		users = usersRepository.findByNameOrEmail(pageable, searchText);
 		
 		Iterator<User> it = users.iterator();
 		while(it.hasNext()) {
