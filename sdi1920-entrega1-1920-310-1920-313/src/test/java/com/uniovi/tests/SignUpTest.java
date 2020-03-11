@@ -1,5 +1,7 @@
 package com.uniovi.tests;
 
+import java.util.UUID;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -65,7 +67,7 @@ public class SignUpTest {
 	@Test
 	public void testValidSignup() {
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
-		PO_RegisterView.fillForm(driver, "example@uniovi.es", "Pedrin", "Garcia", "123456", "123456");
+		PO_RegisterView.fillForm(driver, UUID.randomUUID().toString() + "@uniovi.es", "Pedrin", "Garcia", "123456", "123456");
 		PO_HomeView.checkKey(driver, "welcome.message", PO_Properties.getSPANISH());
 	}
 	// Prueba2
@@ -73,22 +75,15 @@ public class SignUpTest {
 	public void testInvalidEmptySignup() {
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
 		PO_RegisterView.fillForm(driver, "", "Pedrin", "Garcia", "123456", "123456");
-		PO_RegisterView.checkKey(driver, "signUp.register", PO_Properties.getSPANISH());
-		/*
 		PO_RegisterView.checkKey(driver, "error.email.empty", PO_Properties.getSPANISH());
-		*/
+
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
 		PO_RegisterView.fillForm(driver, "example@uniovi.es", "", "Garcia", "123456", "123456");
-		PO_RegisterView.checkKey(driver, "signUp.register", PO_Properties.getSPANISH());
-		/*
-		PO_HomeView.checkKey(driver, "error.name.empty", PO_Properties.getSPANISH());
-		*/
+		PO_RegisterView.checkKey(driver, "error.name.empty", PO_Properties.getSPANISH());
+		
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
 		PO_RegisterView.fillForm(driver, "example@uniovi.es", "Pedrin", "", "123456", "123456");
-		PO_RegisterView.checkKey(driver, "signUp.register", PO_Properties.getSPANISH());
-		/*
-		PO_HomeView.checkKey(driver, "error.lastName.empty", PO_Properties.getSPANISH());
-		*/
+		PO_RegisterView.checkKey(driver, "error.lastName.empty", PO_Properties.getSPANISH());
 	}
 	
 	// Prueba3
@@ -102,11 +97,13 @@ public class SignUpTest {
 	@Test
 	// Prueba4
 	public void testInvalidExistingEmail() {
+		String uuidTestLocal = UUID.randomUUID().toString();
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
-		PO_RegisterView.fillForm(driver, "example@gmail.com", "Pedrin", "Garcia", "123456", "123456");
+		PO_RegisterView.fillForm(driver, uuidTestLocal + "@gmail.com", "Pedrin", "Garcia", "123456", "123456");
 		PO_HomeView.checkKey(driver, "welcome.message", PO_Properties.getSPANISH());
+		PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
-		PO_RegisterView.fillForm(driver, "example@gmail.com", "Pedrin", "Garcia", "123456", "123456");
+		PO_RegisterView.fillForm(driver, uuidTestLocal + "@gmail.com", "Pedrin", "Garcia", "123456", "123456");
 		PO_RegisterView.checkKey(driver, "error.signup.email.duplicate", PO_Properties.getSPANISH());
 	}
 
