@@ -2,6 +2,8 @@ package com.uniovi.repositories;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -11,4 +13,7 @@ import com.uniovi.entities.User;
 
 public interface FriendRequestRepository extends CrudRepository<FriendRequest, Long>{
 
+	@Query("SELECT fr FROM FriendRequest fr WHERE fr.reciever LIKE ?1")
+	public Page<FriendRequest> findRequestByUser(Pageable pageable, User user);
+	
 }

@@ -12,12 +12,12 @@
 		<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
 				<li><a href="/">Home</a></li>
-				<li id="marks-menu" class="dropdown"><a class="dropdown-toogle"
+				<li id="friendRequest-menu" class="dropdown"><a class="dropdown-toogle"
 					data-toggle="dropdown" href="#" th:text="#{friends.message}"> <span
 						class="caret"></span>
 				</a>
 					<ul class="dropdown-menu" sec:authorize="isAuthenticated()">
-						<li><a href="/friends/list" th:text="#{friends.list}"></a></li>
+						<li><a href="/friendRequest/list" th:text="#{friendRequest.list}"></a></li>
 					</ul></li>
 				<li id="users-menu" class="dropdown"
 					><a
