@@ -1,6 +1,19 @@
 package com.uniovi.entities;
 
-import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "user")
@@ -19,11 +32,31 @@ public class User {
 	@Transient
 	private String passwordConfirm = "";
 
+	@OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+	private Set<FriendRequest> sentRequests;
+
+	@OneToMany(mappedBy = "reciever", cascade = CascadeType.ALL)
+	private Set<FriendRequest> recievedRequest;
+
+	public User(String email) {
+		if (email != "" && email != null)
+			this.email = email;
+		else
+			throw new IllegalArgumentException("Email cannot be empty or null");
+	}
+
 	public User(String email, String name, String lastName) {
-		super();
-		this.email = email;
+		this(email);
 		this.name = name;
 		this.lastName = lastName;
+	}
+
+	public User(String email, String name, String lastName, Set<FriendRequest> sentRequests,
+			Set<FriendRequest> recievedRequests) {
+		this(email, name, lastName);
+		this.sentRequests = new HashSet<FriendRequest>(sentRequests);
+		this.recievedRequest = new HashSet<FriendRequest>(recievedRequests);
+
 	}
 
 	public User() {
@@ -84,6 +117,45 @@ public class User {
 
 	public void setPasswordConfirm(String passwordConfirm) {
 		this.passwordConfirm = passwordConfirm;
+	}
+
+	public Set<FriendRequest> getSentRequests() {
+		return new HashSet<FriendRequest>(this.sentRequests);
+	}
+
+	public Set<FriendRequest> getRecievedRequests() {
+		return new HashSet<FriendRequest>(this.recievedRequest);
+	}
+
+	public boolean didSentRequestToOther(User user) {
+		boolean res = false;
+		for (FriendRequest request : this.sentRequests) {
+			if (request.getReciever().getEmail().equals(user.getEmail())) {
+				res = true;
+				break;
+			}
+		}
+
+		return res;
+	}
+
+	public boolean didRecieveRequestFromLogged() {	
+		Object logged = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String email = "";
+		if (logged instanceof UserDetails)
+			email = ((UserDetails) logged).getUsername();
+		else
+			email = logged.toString();
+		boolean res = false;
+
+		for (FriendRequest request : this.recievedRequest) {
+			if (request.getSender().getEmail().equals(email)) {
+				res = true;
+				break;
+			}
+		}
+		
+		return res;
 	}
 
 }
