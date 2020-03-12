@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/head" />
+<body>
+	<!--Barra de Navegación superior -->
+	<nav th:replace="fragments/nav" />
+	<div class="container">
+		<h2 th:text="#{friends.list.title}">Amigos</h2>
+		<form class="navbar-form" action="/friend/list">
+			<div class="form-group">
+				<input name="searchText" type="text" class="form-control" size="50"
+					th:placeholder="#{friends.searchPlaceholder}">
+			</div>
+			<button type="submit" class="btn btn-default" th:text="#{friends.searchButton}">Buscar</button>
+		</form>
+		<p th:text="#{friends.nextUsers}">Los usuarios que actualmente figuran en el sistema son los
+			siguientes:</p>
+		<button type="button" id="updateButton" class="btn btn-default" th:text="#{friends.updateButton}">Actualizar
+		</button>
+		<script>
+			$("#updateButton").click(function() {
+				$("#tablefriends").load('/friend/list/update');
+			});
+		</script>
+
+		<div class="table-responsive">
+			<table class="table table-hover" th:fragment="tablefriends"
+				id="tablefriends">
+				<thead>
+					<tr>
+						<th th:text="#{friends.nameHead}">Nombre</th>
+						<th th:text="#{friends.lastNameHead}">Apellidos</th>
+						<th th:text="#{friends.emailHead}">Email</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="friend: ${friendsList}">
+						<td th:text="${friend.name}">Nombre del usuario</td>
+						<td th:text="${friend.lastName}">Apellidos del usuario</td>
+						<td th:text="${friend.email}">Email del usuario</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<footer th:replace="fragments/pagination" />
+</body>
+</html>
