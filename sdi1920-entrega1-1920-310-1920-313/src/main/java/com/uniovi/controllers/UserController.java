@@ -94,7 +94,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/user/{id}/send", method = RequestMethod.GET)
-	public String setResendTrue(Model model, @PathVariable Long id) {
+	public String sendRequest(Model model, @PathVariable Long id) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String username = "";
 		if(principal instanceof UserDetails)

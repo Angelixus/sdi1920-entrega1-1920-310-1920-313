@@ -19,7 +19,7 @@
 		</button>
 		<script>
 			$("#updateButton").click(function() {
-				$("#tableUsers").load('/user/list/update');
+				$("#tablefriendRequest").load('/friendRequest/list/update');
 			});
 		</script>
 
@@ -34,6 +34,24 @@
 				<tbody>
 					<tr th:each="request: ${friendRequestList}">
 						<td th:text="${request.sender.name}">Nombre del usuario</td>
+						<td>						
+							<button type="button" th:id="${'acceptFriendRequest' + request.sender.id}"
+								class="btn btn-info" th:text="#{friendList.acceptRequest}">Aceptar petición de amistad</button>
+							<script th:inline="javascript">
+							/*<![CDATA[*/
+							 $( "#acceptFriendRequest[[${request.sender.id}]]" ).click(function() {
+							 $.get( "/friendRequest/[[${request.sender.id}]]/accept", function( data ) {
+							 var numberPage = [[${param.page}]];
+							 var urlUpdate = '/friendRequest/list/update';
+							 if ( numberPage != null ){
+							 urlUpdate += "?page="+numberPage[0];
+							 }
+							 $("#tablefriendRequest").load(urlUpdate);
+							 });
+							 });
+							 /*]]>*/
+							</script>
+						</td>
 					</tr>
 				</tbody>
 			</table>

@@ -37,6 +37,12 @@ public class User {
 
 	@OneToMany(mappedBy = "reciever", cascade = CascadeType.ALL)
 	private Set<FriendRequest> recievedRequest;
+	
+	@OneToMany(mappedBy = "friendA", cascade = CascadeType.ALL)
+	private Set<Friend> friendsIsA;
+	
+	@OneToMany(mappedBy = "friendB", cascade = CascadeType.ALL)
+	private Set<Friend> friendsIsB;
 
 	public User(String email) {
 		if (email != "" && email != null)
@@ -52,11 +58,12 @@ public class User {
 	}
 
 	public User(String email, String name, String lastName, Set<FriendRequest> sentRequests,
-			Set<FriendRequest> recievedRequests) {
+			Set<FriendRequest> recievedRequests, Set<Friend> friendsIsA, Set<Friend> friendsIsB) {
 		this(email, name, lastName);
 		this.sentRequests = new HashSet<FriendRequest>(sentRequests);
 		this.recievedRequest = new HashSet<FriendRequest>(recievedRequests);
-
+		this.friendsIsA = new HashSet<Friend>(friendsIsA);
+		this.friendsIsB = new HashSet<Friend>(friendsIsB);
 	}
 
 	public User() {
@@ -125,6 +132,14 @@ public class User {
 
 	public Set<FriendRequest> getRecievedRequests() {
 		return new HashSet<FriendRequest>(this.recievedRequest);
+	}
+	
+	public Set<Friend> getFriendsIsA() {
+		return new HashSet<Friend>(this.friendsIsA);
+	}
+	
+	public Set<Friend> getFriendsIsB() {
+		return new HashSet<Friend>(this.friendsIsB);
 	}
 
 	public boolean didSentRequestToOther(User user) {
