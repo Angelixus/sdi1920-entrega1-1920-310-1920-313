@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import com.uniovi.entities.FriendRequest;
+import com.uniovi.entities.User;
 
 public interface FriendRequestRepository extends CrudRepository<FriendRequest, Long>{
 
