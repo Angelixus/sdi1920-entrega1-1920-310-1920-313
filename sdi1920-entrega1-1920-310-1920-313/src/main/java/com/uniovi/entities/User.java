@@ -173,4 +173,28 @@ public class User {
 		return res;
 	}
 	
+	public boolean isAlreadyFriend() {
+		Object logged = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String email = "";
+		if (logged instanceof UserDetails)
+			email = ((UserDetails) logged).getUsername();
+		else
+			email = logged.toString();
+		boolean res = false;
+		
+		for (Friend friend : this.friendsIsA) {
+			if (friend.getFriendA().getEmail().equals(email) || friend.getFriendB().getEmail().equals(email)) {
+				res = true;
+				break;
+			}
+		}	
+		for (Friend friend : this.friendsIsB) {
+			if (friend.getFriendA().getEmail().equals(email) || friend.getFriendB().getEmail().equals(email)) {
+				res = true;
+				break;
+			}
+		}	
+		return res;
+	}
+	
 }
