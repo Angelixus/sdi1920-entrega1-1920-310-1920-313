@@ -32,8 +32,8 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="user: ${usersList}">
-						<td th:text="${user.name}">Nombre del usuario</td>
+					<tr th:each="request: ${friendRequestList}">
+						<td th:text="${request.sender.name}">Nombre del usuario</td>
 					</tr>
 				</tbody>
 			</table>
