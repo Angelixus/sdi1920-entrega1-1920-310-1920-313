@@ -11,6 +11,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.uniovi.tests.pageobjects.PO_HomeView;
+import com.uniovi.tests.pageobjects.PO_LoginView;
 import com.uniovi.tests.pageobjects.PO_PrivateView;
 import com.uniovi.tests.pageobjects.PO_Properties;
 
@@ -20,7 +21,7 @@ public class LogInTest {
 	// En Windows (Debe ser la versiÃ³n 65.0.1 y desactivar las actualizacioens
 		// automÃ¡ticas)):
 		static String PathFirefox65 = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
-		static String Geckdriver024 = "C:\\Users\\angel\\git\\sdi1920-entrega1-1920-310-1920-313\\sdi1920-entrega1-1920-310-1920-313\\lib\\geckodriver024win64.exe";
+		static String Geckdriver024 = "C:\\Users\\angel\\git\\repository\\sdi1920-entrega1-1920-310-1920-313\\lib\\geckodriver024win64.exe";
 		// En MACOSX (Debe ser la versiÃ³n 65.0.1 y desactivar las actualizacioens
 		// automÃ¡ticas):
 		// static String PathFirefox65 =
@@ -67,5 +68,18 @@ public class LogInTest {
 			PO_PrivateView.fillFormAndCheckKey(driver, "lucio@uniovi.es", "123456", "userList.nextUsers", PO_Properties.getSPANISH());
 			PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
 		}
-
+		
+		@Test
+		public void invalidSignupBlank() {
+			PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+			PO_LoginView.fillForm(driver, "", "");
+			PO_LoginView.checkKey(driver, "error.invalidLogin", PO_Properties.getSPANISH());
+		}
+		
+		@Test
+		public void invalidSignupBadCredentials() {
+			PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+			PO_LoginView.fillForm(driver, "lucio@uniovi.es", "1111111");
+			PO_LoginView.checkKey(driver, "error.invalidLogin", PO_Properties.getSPANISH());
+		}
 }

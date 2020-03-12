@@ -11,7 +11,7 @@
 		col-sm-2" for="username" th:text="#{login.email}">Email:</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" name="username"
-						th:placeholder="#{login.email.placeholder}" required="true" />
+						th:placeholder="#{login.email.placeholder}"/>
 				</div>
 			</div>
 			<div class="form-group">
@@ -19,7 +19,7 @@
 		col-sm-2" for="username" th:text="#{login.password}">Password:</label>
 				<div class="col-sm-10">
 					<input type="password" class="form-control" name="password"
-						th:placeholder="#{login.password.placeholder}" required="true" />
+						th:placeholder="#{login.password.placeholder}"/>
 					<span class="text-danger" th:if="${errors!=null}" th:text="#{error.invalidLogin}"/>
 				</div>
 			</div>
