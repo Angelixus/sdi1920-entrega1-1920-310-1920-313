@@ -28,4 +28,9 @@ public class FriendRequestService {
 		friendRequestList = friendRequestRepository.findRequestByUser(page, user);
 		return friendRequestList;
 	}
+
+	public void deleteFriendRequest(User userSender, User userReciever) {
+		FriendRequest request = friendRequestRepository.findByUsers(userSender, userReciever);
+		friendRequestRepository.delete(request);
+	}
 }

@@ -10,32 +10,25 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.uniovi.entities.FriendRequest;
 import com.uniovi.entities.User;
-import com.uniovi.services.FriendRequestService;
 import com.uniovi.services.FriendService;
 import com.uniovi.services.UserService;
 
 @Controller
-public class FriendRequestController {
+public class FriendController {
 
-	@Autowired
-	private FriendRequestService friendRequestService;
-	
-	@Autowired
-	private UserService userService;
-	
 	@Autowired
 	private FriendService friendService;
 	
-	@RequestMapping("/friendRequest/list")
+	@Autowired
+	private UserService userService;
+		
+	@RequestMapping("/friend/list")
 	public String getListado(Model model, Pageable pageable, @RequestParam(value="",required = false) String searchText) {
-		Page<FriendRequest> friendRequests = new PageImpl<FriendRequest>(new ArrayList<FriendRequest>());
+		Page<User> friendRequests = new PageImpl<User>(new ArrayList<User>());
 		Object loggedEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(loggedEmail instanceof UserDetails)
 			loggedEmail = ((UserDetails)loggedEmail).getUsername();
@@ -46,15 +39,16 @@ public class FriendRequestController {
 		if (searchText != null && !searchText.isEmpty()) {
 			//users = friendRequestService.searchUsersByNameOrEmail(pageable, searchText);
 		}else {
-			friendRequests = friendRequestService.getFriendRequests(pageable, loggedUser);
+			friendRequests = friendService.getFriends(pageable, loggedUser);
 		}
 		
-		model.addAttribute("friendRequestList", friendRequests.getContent());	
+		model.addAttribute("friendsList", friendRequests.getContent());	
 		model.addAttribute("page", friendRequests);
-		return "friendRequest/list";
+		return "friend/list";
 	}
 	
-	@RequestMapping(value = "/friendRequest/list/update")
+	
+	@RequestMapping(value = "/friend/list/update")
 	public String updateList(Model model, Pageable pageable) {
 		Object loggedEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(loggedEmail instanceof UserDetails)
@@ -63,24 +57,7 @@ public class FriendRequestController {
 			loggedEmail = loggedEmail.toString();
 			
 		User loggedUser = userService.getUserByEmail((String) loggedEmail);
-		model.addAttribute("friendRequestList", friendRequestService.getFriendRequests(pageable, loggedUser).getContent());
-		return "friendRequest/list :: tablefriendRequest";
-	}
-	
-	@RequestMapping(value = "/friendRequest/{id}/accept", method = RequestMethod.GET)
-	public String acceptRequest(Model model, @PathVariable Long id) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String username = "";
-		if(principal instanceof UserDetails)
-			username = ((UserDetails)principal).getUsername();
-		else
-			username = principal.toString();
-		User userAFriend = userService.getUser(id);
-		User userBFriend = userService.getUserByEmail(username);
-		
-		friendRequestService.deleteFriendRequest(userAFriend, userBFriend);
-		friendService.createFriends(userAFriend, userBFriend);
-		return "redirect:/user/list";
-	}
-	
+		model.addAttribute("friendsList", friendService.getFriends(pageable, loggedUser).getContent());
+		return "friend/list :: tablefriends";
+	} 
 }
