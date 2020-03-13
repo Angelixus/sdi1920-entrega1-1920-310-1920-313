@@ -1,6 +1,6 @@
 package com.uniovi.tests;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,7 +26,7 @@ import com.uniovi.tests.pageobjects.PO_PrivateView;
 import com.uniovi.tests.pageobjects.PO_Properties;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class UserListTest {
+public class SearchUsersTest {
 
 	// En Windows (Debe ser la versiÃ³n 65.0.1 y desactivar las actualizacioens
 	// automÃ¡ticas)):
@@ -67,10 +67,8 @@ public class UserListTest {
 		driver.quit();
 	}
 
-	// Funciona siempre que el tamaño de cada pagina en la paginacion sea 5 en el
-	// archivo de configuracion
 	@Test
-	public void testUserList() {
+	public void searchEmptyTest() {
 		Connection con = null;
 		Statement st = null;
 		ResultSet rs = null;
@@ -82,6 +80,8 @@ public class UserListTest {
 
 			PO_PrivateView.fillFormAndCheckKey(driver, "lucio@uniovi.es", "123456", "userList.nextUsers",
 					PO_Properties.getSPANISH());
+
+			PO_PrivateView.searchText(driver, "");
 			List<String> emails = new ArrayList<String>();
 			while (rs.next()) {
 				String email = rs.getString(1);
@@ -139,4 +139,42 @@ public class UserListTest {
 		}
 	}
 
+	@Test
+	public void searchNonExistingTextTest() {
+		PO_PrivateView.fillFormAndCheckKey(driver, "lucio@uniovi.es", "123456", "userList.nextUsers",
+				PO_Properties.getSPANISH());
+
+		PO_PrivateView.searchText(driver, "########");
+		assertTrue(PO_PrivateView.checkElementDoesNotExist(driver, "//tbody//td"));
+	}
+	
+	@Test
+	public void searchExistingEmailTest() {
+		PO_PrivateView.fillFormAndCheckKey(driver, "lucio@uniovi.es", "123456", "userList.nextUsers",
+				PO_Properties.getSPANISH());
+
+		PO_PrivateView.searchText(driver, "juan@uniovi.es");
+		List<WebElement> elements = PO_PrivateView.checkElement(driver, "text", "juan@uniovi.es");
+		assertTrue(elements.size() == 1);
+	}
+	
+	@Test
+	public void searchExistingNameTest() {
+		PO_PrivateView.fillFormAndCheckKey(driver, "lucio@uniovi.es", "123456", "userList.nextUsers",
+				PO_Properties.getSPANISH());
+
+		PO_PrivateView.searchText(driver, "Alejandro");
+		List<WebElement> elements = PO_PrivateView.checkElement(driver, "text", "alex@uniovi.es");
+		assertTrue(elements.size() == 1);
+	}
+	
+	@Test
+	public void searchExistingSurnameTest() {
+		PO_PrivateView.fillFormAndCheckKey(driver, "lucio@uniovi.es", "123456", "userList.nextUsers",
+				PO_Properties.getSPANISH());
+
+		PO_PrivateView.searchText(driver, "Almonte");
+		List<WebElement> elements = PO_PrivateView.checkElement(driver, "text", "wolf@uniovi.es");
+		assertTrue(elements.size() == 1);
+	}
 }

@@ -77,7 +77,7 @@ public class UserController {
 	public String getListado(Model model, Pageable pageable, @RequestParam(value="",required = false) String searchText) {
 		Page<User> users = new PageImpl<User>(new ArrayList<User>());
 		if (searchText != null && !searchText.isEmpty()) {
-			users = userService.searchUsersByNameOrEmail(pageable, searchText);
+			users = userService.searchUsersByNameSurnameOrEmail(pageable, searchText);
 		}else {
 			users = userService.getUsers(pageable);
 		}

@@ -56,11 +56,11 @@ public class UserService {
 		usersRepository.save(previous);
 	}
 
-	public Page<User> searchUsersByNameOrEmail(Pageable pageable, String searchText){
+	public Page<User> searchUsersByNameSurnameOrEmail(Pageable pageable, String searchText){
 		Page<User> users = new PageImpl<User>(new ArrayList<User>());
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		searchText = "%"+searchText+"%";
-		users = usersRepository.findByNameOrEmail(pageable, searchText);
+		users = usersRepository.findByNameSurnameOrEmail(pageable, searchText);
 		
 		Iterator<User> it = users.iterator();
 		while(it.hasNext()) {
