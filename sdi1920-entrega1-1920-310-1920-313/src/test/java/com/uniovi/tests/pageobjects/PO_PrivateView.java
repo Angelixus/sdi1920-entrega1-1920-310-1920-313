@@ -1,8 +1,14 @@
 package com.uniovi.tests.pageobjects;
 
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import com.uniovi.tests.utils.SeleniumUtils;
 
 public class PO_PrivateView extends PO_NavView {
 
@@ -24,5 +30,24 @@ public class PO_PrivateView extends PO_NavView {
 		input.clear();
 		input.sendKeys(searchString);
 		driver.findElement(By.xpath("//button[@type=\"submit\"]")).click();;
+	}
+
+	public static void enterFriendList(WebDriver driver, String key, int locale) {
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//li[@id=\"friendRequest-menu\"]", getTimeout());
+		assertTrue(elementos.size() == 1);
+		elementos.get(0).click();
+		
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//li[@id=\"friendRequest-menu\"]//ul//li//a[@href=\"/friendRequest/list\"]", getTimeout());
+		assertTrue(elementos.size() == 1);
+		elementos.get(0).click();
+		
+		PO_FriendRequestListView.checkKey(driver, key, locale);
+		
+	}
+
+	public static void sendFriendRequest(WebDriver driver, String xpath) {
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", xpath, getTimeout());
+		assertTrue(elementos.size() == 1);
+		elementos.get(0).click();
 	}
 }
