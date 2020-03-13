@@ -32,7 +32,7 @@ public class PO_PrivateView extends PO_NavView {
 		driver.findElement(By.xpath("//button[@type=\"submit\"]")).click();;
 	}
 
-	public static void enterFriendList(WebDriver driver, String key, int locale) {
+	public static void enterFriendRequestList(WebDriver driver, String key, int locale) {
 		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//li[@id=\"friendRequest-menu\"]", getTimeout());
 		assertTrue(elementos.size() == 1);
 		elementos.get(0).click();
@@ -49,5 +49,15 @@ public class PO_PrivateView extends PO_NavView {
 		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", xpath, getTimeout());
 		assertTrue(elementos.size() == 1);
 		elementos.get(0).click();
+	}
+
+	public static void acceptFriendRequest(WebDriver driver, String friendName) {
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//td[text()=\"" + friendName + "\"]/parent::*//td//button", getTimeout());
+		assertTrue(elementos.size() == 1);
+		elementos.get(0).click();
+	}
+
+	public static int getFriendRequestCount(WebDriver driver, String string) {
+		return SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody//tr", getTimeout()).size();
 	}
 }

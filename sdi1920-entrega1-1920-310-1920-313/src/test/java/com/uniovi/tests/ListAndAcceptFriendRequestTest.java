@@ -23,7 +23,7 @@ import com.uniovi.tests.pageobjects.PO_PrivateView;
 import com.uniovi.tests.pageobjects.PO_Properties;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SendFriendRequestTest {
+public class ListAndAcceptFriendRequestTest {
 
 	// En Windows (Debe ser la versiÃ³n 65.0.1 y desactivar las actualizacioens
 	// automÃ¡ticas)):
@@ -57,19 +57,41 @@ public class SendFriendRequestTest {
 
 	@BeforeClass
 	static public void begin() {
+		driver.navigate().to(URL);
+		// We need to send some friend requests first
+		PO_PrivateView.fillFormAndCheckKey(driver, "lucio@uniovi.es", "123456", "userList.nextUsers",
+				PO_Properties.getSPANISH());
+
+		PO_PrivateView.sendFriendRequest(driver, "//tbody[tr]//tr[1]//div//div//button");
+
+		PO_NavView.clickOption(driver, "logout", "class", "btn btn-primary");
+		PO_PrivateView.fillFormAndCheckKey(driver, "geralt@uniovi.es", "123456", "userList.nextUsers",
+				PO_Properties.getSPANISH());
+
+		PO_PrivateView.sendFriendRequest(driver, "//tbody//tr[2]//div//div//button");
+
+		PO_NavView.clickOption(driver, "logout", "class", "btn btn-primary");
+
+		PO_PrivateView.fillFormAndCheckKey(driver, "wolf@uniovi.es", "123456", "userList.nextUsers",
+				PO_Properties.getSPANISH());
+
+		PO_PrivateView.sendFriendRequest(driver, "//tbody//tr[2]//div//div//button");
+
+		PO_NavView.clickOption(driver, "logout", "class", "btn btn-primary");
 	}
 
 	@AfterClass
 	static public void end() {
 		Connection con = null;
 		Statement st = null;
-		
+
 		try {
 			con = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost", "SA", "");
 			st = con.createStatement();
-			
+
 			st.executeUpdate("DELETE FROM FRIENDREQUEST");
-		} catch(SQLException e) {
+			st.executeUpdate("DELETE FROM FRIEND");
+		} catch (SQLException e) {
 			try {
 				con.rollback();
 			} catch (SQLException e1) {
@@ -87,27 +109,25 @@ public class SendFriendRequestTest {
 	}
 
 	@Test
-	public void testSendFriendRequest() {
-		PO_PrivateView.fillFormAndCheckKey(driver, "lucio@uniovi.es", "123456", "userList.nextUsers",
-				PO_Properties.getSPANISH());
-		
-		PO_PrivateView.sendFriendRequest(driver, "//tbody[tr]//tr[1]//div//div//button");
-		
-		PO_NavView.clickOption(driver, "logout", "class", "btn btn-primary");
+	public void listFriendRequest() {
 		PO_PrivateView.fillFormAndCheckKey(driver, "juan@uniovi.es", "123456", "userList.nextUsers",
 				PO_Properties.getSPANISH());
-		
+
 		PO_PrivateView.enterFriendRequestList(driver, "friendRequest.list.title", PO_Properties.getSPANISH());
-		
 		PO_FriendRequestListView.checkElement(driver, "text", "Pedro");
+		PO_FriendRequestListView.checkElement(driver, "text", "María");
 	}
-	
+
 	@Test
-	public void testSendFriendRequestAlreadySent() {
-		PO_PrivateView.fillFormAndCheckKey(driver, "lucio@uniovi.es", "123456", "userList.nextUsers",
+	public void acceptFriendRequest() {
+		PO_PrivateView.fillFormAndCheckKey(driver, "juan@uniovi.es", "123456", "userList.nextUsers",
 				PO_Properties.getSPANISH());
-			
-		PO_PrivateView.checkKey(driver, "userList.alreadyFriend", PO_Properties.getSPANISH());
-		assertTrue(PO_PrivateView.checkElementDoesNotExist(driver, "//tbody[tr]//tr[1]//div//div//button"));
+		PO_PrivateView.enterFriendRequestList(driver, "friendRequest.list.title", PO_Properties.getSPANISH());
+
+		int friendsBeforeAccept = PO_PrivateView.getFriendRequestCount(driver, "//tbody//tr");
+		PO_PrivateView.acceptFriendRequest(driver, "Marta");
+		int friendsAfterAccept = PO_PrivateView.getFriendRequestCount(driver, "//tbody//tr");
+		assertTrue(friendsAfterAccept == friendsBeforeAccept - 1);
 	}
+
 }
