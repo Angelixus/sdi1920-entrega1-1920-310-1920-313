@@ -44,6 +44,10 @@ public class User {
 	@OneToMany(mappedBy = "friendB", cascade = CascadeType.ALL)
 	private Set<Friend> friendsIsB;
 
+	@OneToMany(mappedBy = "poster", cascade = CascadeType.ALL)
+	private Set<Publication> publications;
+
+	
 	public User(String email) {
 		if (email != "" && email != null)
 			this.email = email;
@@ -142,6 +146,16 @@ public class User {
 		return new HashSet<Friend>(this.friendsIsB);
 	}
 
+	public Set<Publication> getPublications() {
+		return new HashSet<Publication>(this.publications);
+	}
+
+	public void setPublications(Set<Publication> publications) {
+		this.publications = new HashSet<Publication>(publications);
+	}
+
+	
+	
 	public boolean didSentRequestToOther(User user) {
 		boolean res = false;
 		for (FriendRequest request : this.sentRequests) {

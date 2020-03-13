@@ -10,23 +10,31 @@
 			<a href="/"><img src="/img/icons8-website-64.png" alt="logo" /></a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
-				<ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
+			<ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
 				<li><a href="/">Home</a></li>
-				<li id="friendRequest-menu" class="dropdown"><a class="dropdown-toogle"
-					data-toggle="dropdown" href="#" th:text="#{friends.message}"> <span
-						class="caret"></span>
+				<li id="publications-menu" class="dropdown"><a
+					class="dropdown-toogle" data-toggle="dropdown" href="#"
+					th:text="#{publications.message}"><span class="caret"></span> </a>
+					<ul class="dropdown-menu">
+						<li sec:authorize="isAuthenticated()"><a
+							href="/publication/add" th:text="#{publications.add}"></a></li>
+						<li><a href="/publication/list" th:text="#{publications.list}"></a></li>
+					</ul></li>
+				<li id="friendRequest-menu" class="dropdown"><a
+					class="dropdown-toogle" data-toggle="dropdown" href="#"
+					th:text="#{friends.message}"> <span class="caret"></span>
 				</a>
 					<ul class="dropdown-menu" sec:authorize="isAuthenticated()">
-						<li><a href="/friendRequest/list" th:text="#{friendRequest.list}"></a></li>
+						<li><a href="/friendRequest/list"
+							th:text="#{friendRequest.list}"></a></li>
 						<li><a href="/friend/list" th:text="#{friends.list}"></a></li>
 					</ul></li>
-				<li id="users-menu" class="dropdown"
-					><a
-					class="dropdown-toogle" data-toggle="dropdown" href="#"
-					th:text="#{users.message}"><span class="caret"></span> </a>
+				<li id="users-menu" class="dropdown"><a class="dropdown-toogle"
+					data-toggle="dropdown" href="#" th:text="#{users.message}"><span
+						class="caret"></span> </a>
 					<ul class="dropdown-menu">
-						<li sec:authorize="hasRole('ROLE_ADMIN')">
-							<a href="/user/add" th:text="#{users.add}"></a></li>
+						<li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/user/add"
+							th:text="#{users.add}"></a></li>
 						<li><a href="/user/list" th:text="#{users.list}"></a></li>
 					</ul></li>
 			</ul>
@@ -57,7 +65,8 @@
 					th:text="#{login.message}"> <span
 						class="glyphicon glyphicon-log-in"></span> Identifícate
 				</a></li>
-				<li sec:authorize="isAuthenticated()"><a href="/logout" th:text="#{logout.message}"> <span
+				<li sec:authorize="isAuthenticated()"><a href="/logout"
+					th:text="#{logout.message}"> <span
 						class="glyphicon glyphicon-log-out"></span> Desconectar
 				</a></li>
 			</ul>
