@@ -60,4 +60,16 @@ public class PO_PrivateView extends PO_NavView {
 	public static int getFriendRequestCount(WebDriver driver, String string) {
 		return SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody//tr", getTimeout()).size();
 	}
+
+	public static void enterFriendList(WebDriver driver, String key, int locale) {
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//li[@id=\"friendRequest-menu\"]", getTimeout());
+		assertTrue(elementos.size() == 1);
+		elementos.get(0).click();
+		
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//li[@id=\"friendRequest-menu\"]//ul//li//a[@href=\"/friend/list\"]", getTimeout());
+		assertTrue(elementos.size() == 1);
+		elementos.get(0).click();
+		
+		PO_FriendRequestListView.checkKey(driver, key, locale);		
+	}
 }
