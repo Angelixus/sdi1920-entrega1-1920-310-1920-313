@@ -36,6 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/friend/**").hasAnyAuthority("ROLE_STANDART", "ROLE_ADMIN")
 				.antMatchers("/friendRequest/**").hasAnyAuthority("ROLE_STANDART", "ROLE_ADMIN")
 				.antMatchers("/user/**").hasAnyAuthority("ROLE_STANDART", "ROLE_ADMIN")
+				.antMatchers("/publication/**").hasAnyAuthority("ROLE_STANDART", "ROLE_ADMIN")
 				.and()
 				.formLogin()
 				.loginPage("/login")

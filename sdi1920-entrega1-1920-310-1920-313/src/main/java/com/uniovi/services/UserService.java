@@ -2,6 +2,7 @@ package com.uniovi.services;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,12 @@ public class UserService {
 		return users;
 	}
 
+	public List<User> getUsers() {
+		List<User> users = new ArrayList<User>();
+		usersRepository.findAll().forEach(users::add);
+		return users;
+	}
+	
 	public User getUser(Long id) {
 		return usersRepository.findById(id).get();
 	}
