@@ -1,7 +1,9 @@
 package com.uniovi.controllers;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,8 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.uniovi.entities.Publication;
+import com.uniovi.entities.User;
 import com.uniovi.services.PublicationService;
 import com.uniovi.services.UserService;
 
@@ -33,7 +37,6 @@ public class PublicationController {
 			email = ((UserDetails) poster).getUsername();
 		else
 			email = poster.toString();
-		boolean res = false;
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		Date creationDate = new Date(ts.getTime());
@@ -48,6 +51,23 @@ public class PublicationController {
 	public String getPublication(Model model) {
 		model.addAttribute("usersList", usersService.getUsers());
 		return "publication/add";
+	}
+	
+	@RequestMapping("/publication/list")
+	public String getList(Model model) {
+		Object poster = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String email = "";
+		if (poster instanceof UserDetails)
+			email = ((UserDetails) poster).getUsername();
+		else
+			email = poster.toString();
+		
+		User user = usersService.getUserByEmail(email);
+		List<Publication> publications = new ArrayList<Publication>();
+		publications = publicationService.getPublicationsForUser(user);
+		
+		model.addAttribute("myPublicationsList", publications);
+		return "publication/list";
 	}
 	
 }
