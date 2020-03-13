@@ -26,5 +26,11 @@ public class PO_NavView extends PO_View {
 		elementos = SeleniumUtils.EsperaCargaPagina(driver, "id", textLanguage, getTimeout());
 		elementos.get(0).click();
 	}
+
+	public static void clickXPath(WebDriver driver, String xpath) {
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", xpath, getTimeout());
+		assertTrue(elementos.size() == 1);
+		elementos.get(0).click();		
+	}
 	
 }
