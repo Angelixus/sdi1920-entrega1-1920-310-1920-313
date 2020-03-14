@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/head" />
+
+<nav th:replace="fragments/nav" />
+
+<body>
+	<div class="container">
+		<h2 th:text="#{publications.myList.message}">Publicaciones</h2>
+		<form class="navbar-form" action="/publication/list">
+			<div class="form-group">
+				<p th:text="#{publications.myList.description}"></p>
+				<div class="table-responsive">
+					<table class="table table-hover" th:fragment="tableMyPublications"
+						id="tableMyPublications">
+						<thead>
+							<tr>
+								<th th:text="#{publications.myList.date}">Date</th>
+								<th th:text="#{publications.myList.title}">Title</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="publication : ${myPublicationsList}">
+								<td th:text="${publication.date}">Date</td>
+								<td th:text="${publication.title}">Titulo</td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+		</form>
+		</div>
+	<footer th:replace="fragments/footer" />
+</body>
+</html>
