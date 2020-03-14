@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +20,7 @@ import com.uniovi.entities.Publication;
 import com.uniovi.entities.User;
 import com.uniovi.services.PublicationService;
 import com.uniovi.services.UserService;
+import com.uniovi.validators.CreatePublicationValidator;
 
 @Controller
 public class PublicationController {
@@ -28,8 +31,15 @@ public class PublicationController {
 	@Autowired
 	private UserService usersService;
 	
+	@Autowired
+	private CreatePublicationValidator pubValidator;
+	
 	@RequestMapping(value = "/publication/add", method = RequestMethod.POST)
-	public String setPublication(@ModelAttribute Publication publication) {
+	public String setPublication(@ModelAttribute @Validated Publication publication, BindingResult result) {
+		pubValidator.validate(publication, result);
+		if(result.hasErrors())
+			return "/publication/add";
+		
 		Object poster = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String email = "";
 		if (poster instanceof UserDetails)
@@ -48,7 +58,7 @@ public class PublicationController {
 
 	@RequestMapping(value = "/publication/add")
 	public String getPublication(Model model) {
-		model.addAttribute("usersList", usersService.getUsers());
+		model.addAttribute("publication", new Publication());
 		return "publication/add";
 	}
 	
