@@ -32,7 +32,11 @@ public class UserService {
 	public Page<User> getUsers(Pageable pageable) {
 		Page<User> users = new PageImpl<User>(new ArrayList<User>());
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		users = usersRepository.findAllExceptUserAndAdmin(pageable, auth.getName(), rolesService.getRoles()[1]);
+		User logged = usersRepository.findByEmail(auth.getName());
+		if(!logged.getRole().contentEquals(rolesService.roles[1]))
+			users = usersRepository.findAllExceptUserAndAdmin(pageable, auth.getName(), rolesService.getRoles()[1]);
+		else
+			users = usersRepository.findAll(pageable);	
 		return users;
 	}
 

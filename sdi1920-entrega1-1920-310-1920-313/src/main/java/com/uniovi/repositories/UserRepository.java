@@ -10,6 +10,8 @@ import com.uniovi.entities.User;
 public interface UserRepository extends CrudRepository<User, Long> {
 
 	User findByEmail(String email);
+	
+	Page<User> findAll(Pageable page);
 
 	@Query("SELECT u FROM User u WHERE (LOWER(u.name) LIKE LOWER(?1) OR LOWER(u.email) LIKE LOWER(?1) OR LOWER(u.lastName) LIKE LOWER(?1))")
 	public Page<User> findByNameSurnameOrEmail(Pageable pageable, String name);
