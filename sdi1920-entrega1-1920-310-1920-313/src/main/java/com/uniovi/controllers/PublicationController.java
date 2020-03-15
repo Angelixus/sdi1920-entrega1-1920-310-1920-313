@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -77,6 +78,20 @@ public class PublicationController {
 		
 		model.addAttribute("myPublicationsList", publications);
 		return "publication/list";
+	}
+	
+	@RequestMapping("/publication/list/{id}")
+	public String getPublicationListOfFriend(Model model, @PathVariable Long id) {
+		User userNotLogged = usersService.getUser(id);
+		if(usersService.areFriends(userNotLogged)) {
+			List<Publication> publications = new ArrayList<Publication>();
+			publications = publicationService.getPublicationsForUser(userNotLogged);
+			
+			model.addAttribute("myPublicationsList", publications);
+			return "publication/list";
+		} else {
+			return "redirect:/user/list";
+		}
 	}
 	
 }

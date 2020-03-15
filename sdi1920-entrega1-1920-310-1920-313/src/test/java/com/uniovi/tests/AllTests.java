@@ -7,7 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ LogInTest.class, SignUpTest.class, LogoutTest.class, UserListTest.class, SearchUsersTest.class,
 		SendFriendRequestTest.class, ListAndAcceptFriendRequestTest.class, FriendListTest.class,
-		InternationalizationTest.class })
+		InternationalizationTest.class, AddPublicationTest.class, AdminUserListTest.class })
 public class AllTests {
 
 }

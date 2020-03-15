@@ -82,4 +82,8 @@ public class UserService {
 		}
 		return users;
 	}	
+	
+	public boolean areFriends(User userA) {
+		return userA.isAlreadyFriend();
+	}
 }

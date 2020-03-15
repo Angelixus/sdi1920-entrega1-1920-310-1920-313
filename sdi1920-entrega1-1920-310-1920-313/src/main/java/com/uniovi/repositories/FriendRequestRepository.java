@@ -13,7 +13,7 @@ public interface FriendRequestRepository extends CrudRepository<FriendRequest, L
 	@Query("SELECT fr FROM FriendRequest fr WHERE fr.reciever LIKE ?1")
 	public Page<FriendRequest> findRequestByUser(Pageable pageable, User user);
 
-	@Query("SELECT fr FROM FriendRequest fr WHERE fr.sender LIKE ?1 AND fr.reciever LIKE ?2")
+	@Query("SELECT fr FROM FriendRequest fr WHERE (fr.sender LIKE ?1 AND fr.reciever LIKE ?2) OR (fr.sender LIKE ?2 AND fr.reciever LIKE ?1)")
 	public FriendRequest findByUsers(User userSender, User userReciever);
 	
 }

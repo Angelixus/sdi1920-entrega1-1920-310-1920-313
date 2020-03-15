@@ -35,7 +35,7 @@
 				</thead>
 				<tbody>
 					<tr th:each="friend: ${friendsList}">
-						<td th:text="${friend.name}">Nombre del usuario</td>
+						<td><a th:href="@{'/publication/list/' + ${friend.id}}" th:text="${friend.name}">Nombre del usuario</a></td>
 						<td th:text="${friend.lastName}">Apellidos del usuario</td>
 						<td th:text="${friend.email}">Email del usuario</td>
 					</tr>

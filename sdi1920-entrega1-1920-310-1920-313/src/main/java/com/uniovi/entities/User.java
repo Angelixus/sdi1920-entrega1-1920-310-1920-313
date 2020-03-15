@@ -177,6 +177,13 @@ public class User {
 			email = logged.toString();
 		boolean res = false;
 
+		for (FriendRequest request : this.sentRequests) {
+			if (request.getReciever().getEmail().equals(email)) {
+				res = true;
+				break;
+			}
+		}
+		
 		for (FriendRequest request : this.recievedRequest) {
 			if (request.getSender().getEmail().equals(email)) {
 				res = true;

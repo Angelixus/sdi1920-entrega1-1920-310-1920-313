@@ -37,7 +37,7 @@
 						<td th:text="${user.email}">71888888X</td>
 						<td th:text="${user.name}">Nombre del usuario</td>
 						<td>						
-							<div th:if="${user.isAlreadyFriend() == false}">
+							<div th:if="${user.isAlreadyFriend() == false && user.didRecieveRequestFromLogged() == false}">
 								<div th:if="${user.didRecieveRequestFromLogged() == false}">
 										<button type="button" th:id="${'sendRequestButton' + user.id}"
 											class="btn btn-info" th:text="#{userList.sendRequest}">Enviar Petición</button>

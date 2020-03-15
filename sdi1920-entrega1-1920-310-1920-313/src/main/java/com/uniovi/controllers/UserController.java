@@ -101,10 +101,15 @@ public class UserController {
 			username = ((UserDetails)principal).getUsername();
 		else
 			username = principal.toString();
+		
 		User userSender = userService.getUserByEmail(username);
 		User userReciever = userService.getUser(id);
-		friendRequestService.sendFriendRequest(userSender, userReciever);
-		return "redirect:/user/list";
+		if(friendRequestService.isAlreadySent(userSender, userReciever)) {
+			return "redirect:/user/list";
+		} else {
+			friendRequestService.sendFriendRequest(userSender, userReciever);
+			return "redirect:/user/list";
+		}
 	}
 
 }

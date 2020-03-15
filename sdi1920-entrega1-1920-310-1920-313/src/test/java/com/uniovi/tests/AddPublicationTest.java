@@ -14,20 +14,17 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.uniovi.tests.pageobjects.PO_AddPublication;
-import com.uniovi.tests.pageobjects.PO_HomeView;
-import com.uniovi.tests.pageobjects.PO_LoginView;
 import com.uniovi.tests.pageobjects.PO_NavView;
 import com.uniovi.tests.pageobjects.PO_PrivateView;
 import com.uniovi.tests.pageobjects.PO_Properties;
-import com.uniovi.tests.pageobjects.PO_RegisterView;
 import com.uniovi.tests.pageobjects.PO_View;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AddPublicationTest {
 
 	//Alex
-	static String PathFirefox65 = "C:\\Users\\roxex\\Desktop\\Clase\\3er_Curso\\2ndoTrimestre\\SDI\\Social Network\\Mozilla Firefox\\firefox.exe";
-	static String Geckdriver024 = "C:\\Users\\roxex\\Desktop\\Clase\\3er_Curso\\2ndoTrimestre\\SDI\\Social Network\\geckodriver024win64.exe";
+	static String PathFirefox65 = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+	static String Geckdriver024 = "C:\\Users\\angel\\git\\repository\\sdi1920-entrega1-1920-310-1920-313\\lib\\geckodriver024win64.exe";
 
 	static WebDriver driver = getDriver(PathFirefox65, Geckdriver024);
 	static String URL = "http://localhost:8090/";

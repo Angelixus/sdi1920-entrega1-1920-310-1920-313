@@ -33,4 +33,9 @@ public class FriendRequestService {
 		FriendRequest request = friendRequestRepository.findByUsers(userSender, userReciever);
 		friendRequestRepository.delete(request);
 	}
+
+	public boolean isAlreadySent(User userSender, User userReciever) {
+		FriendRequest request = friendRequestRepository.findByUsers(userSender, userReciever);
+		return request != null;
+	}
 }
