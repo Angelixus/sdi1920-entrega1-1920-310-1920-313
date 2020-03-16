@@ -64,9 +64,35 @@
 								<p th:text="#{userList.alreadyFriend}"></p>
 							</div>
 						</td>
+						<td sec:authorize="hasRole('ROLE_ADMIN')">
+							<div id="checkboxes">
+								<label for="checkbox" th:text="#{userList.deleteCheckbox}"></label>
+								<input type="checkbox" th:id="${'checkbox' + user.id}">
+							</div>
+						</td>
 					</tr>
 				</tbody>
 			</table>
+			<div sec:authorize="hasRole('ROLE_ADMIN')">
+				<button class="btn btn-info" type="button" id="deleteChecked" th:text="#{userList.deleteButton}"></button>
+					<script th:inline="javascript">
+					/*<![CDATA[*/
+					 $( "#deleteChecked" ).click(function() {
+							var checked = [];
+						$('#checkboxes input').each(function() {
+							if($(this).prop('checked') === true) {
+								var idCheck = $(this).attr('id');
+								checked.push(idCheck.substring(idCheck.length - 1));
+							}
+						})
+						console.log(checked)
+						if(checked.length !== 0) {
+							$("#tableUsers").load('/user/deleteChecked', $.param({ ids: checked }, true));
+						}
+					 });
+					 /*]]>*/
+					</script>
+			</div>
 		</div>
 	</div>
 	<footer th:replace="fragments/pagination" />

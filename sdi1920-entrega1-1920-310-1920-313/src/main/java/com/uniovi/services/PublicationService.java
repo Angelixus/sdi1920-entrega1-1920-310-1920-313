@@ -22,5 +22,12 @@ public class PublicationService {
 	public List<Publication> getPublicationsForUser(User user) {
 		return publicationRepository.findByPoster(user);
 	}
+
+	public void deletePublicationsOfUser(User user) {
+		List<Publication> publications = publicationRepository.findByPoster(user);
+		for(Publication publication : publications) {
+			publicationRepository.delete(publication);
+		}
+	}
 	
 }

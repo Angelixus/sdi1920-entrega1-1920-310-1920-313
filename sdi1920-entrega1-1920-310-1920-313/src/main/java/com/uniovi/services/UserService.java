@@ -86,4 +86,8 @@ public class UserService {
 	public boolean areFriends(User userA) {
 		return userA.isAlreadyFriend();
 	}
+
+	public void deleteUser(User user) {
+		usersRepository.delete(user);
+	}
 }

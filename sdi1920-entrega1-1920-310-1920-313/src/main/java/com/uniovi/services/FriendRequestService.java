@@ -1,6 +1,7 @@
 package com.uniovi.services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,5 +38,12 @@ public class FriendRequestService {
 	public boolean isAlreadySent(User userSender, User userReciever) {
 		FriendRequest request = friendRequestRepository.findByUsers(userSender, userReciever);
 		return request != null;
+	}
+
+	public void deleteFriendRequestUser(User user) {
+		List<FriendRequest> requests = friendRequestRepository.findRequestByUserNoPageable(user);
+		for(FriendRequest request : requests) {
+			friendRequestRepository.delete(request);
+		}
 	}
 }

@@ -218,4 +218,8 @@ public class User {
 		return res;
 	}
 	
+	public boolean isAdmin() {
+		return this.role.equals("ROLE_ADMIN");
+	}
+	
 }

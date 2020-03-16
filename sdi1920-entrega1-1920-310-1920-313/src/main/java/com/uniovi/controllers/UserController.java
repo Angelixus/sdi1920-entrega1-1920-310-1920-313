@@ -1,6 +1,7 @@
 package com.uniovi.controllers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.uniovi.entities.User;
 import com.uniovi.services.FriendRequestService;
+import com.uniovi.services.FriendService;
+import com.uniovi.services.PublicationService;
 import com.uniovi.services.RolesService;
 import com.uniovi.services.SecurityService;
 import com.uniovi.services.UserService;
@@ -41,6 +44,12 @@ public class UserController {
 	
 	@Autowired
 	private SecurityService securityService;
+	
+	@Autowired
+	private PublicationService publicationService;
+	
+	@Autowired
+	private FriendService friendService;
 	
 	@RequestMapping(value="/signup")
 	public String signup(Model model) {
@@ -110,6 +119,28 @@ public class UserController {
 			friendRequestService.sendFriendRequest(userSender, userReciever);
 			return "redirect:/user/list";
 		}
+	}
+	
+	@RequestMapping(value="/user/deleteChecked")
+	public String deleteUser(Model model, @RequestParam List<Long> ids, Pageable pageable) {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username = "";
+		if(principal instanceof UserDetails)
+			username = ((UserDetails)principal).getUsername();
+		else
+			username = principal.toString();
+		
+		for(Long id : ids) {
+			User user = userService.getUser(id);			
+			if(!user.getEmail().equals(username)) {
+				publicationService.deletePublicationsOfUser(user);
+				friendService.deleteFriendUser(user);
+				friendRequestService.deleteFriendRequestUser(user);
+				userService.deleteUser(user);	
+			}
+		}
+		model.addAttribute("usersList", userService.getUsers(pageable).getContent());
+		return "user/list :: tableUsers";
 	}
 
 }

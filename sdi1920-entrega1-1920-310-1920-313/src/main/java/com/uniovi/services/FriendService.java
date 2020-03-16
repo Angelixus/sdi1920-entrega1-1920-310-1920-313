@@ -38,4 +38,11 @@ public class FriendService {
 		return new PageImpl<User>(users, aux.getPageable(), aux.getTotalElements());
 	}
 
+	public void deleteFriendUser(User user) {
+		List<Friend> friends = friendRepository.findFriendsNoPageable(user);
+		for(Friend friend : friends) {
+			friendRepository.delete(friend);
+		}
+	}
+
 }
