@@ -74,8 +74,6 @@ public class AdminUserListTest {
 		driver.quit();
 	}
 
-	// Funciona siempre que el tamaño de cada pagina en la paginacion sea 5 en el
-	// archivo de configuracion
 	@Test
 	public void testUserList() {
 		Connection con = null;

@@ -146,7 +146,6 @@ public class InternationalizationTest {
 		PO_NavView.checkKey(driver, "friendRequest.list", PO_Properties.getSPANISH());
 		PO_NavView.checkKey(driver, "friends.list", PO_Properties.getSPANISH());
 		PO_NavView.clickXPath(driver, "//li[@id=\"users-menu\"]");
-		PO_NavView.checkKey(driver, "users.add", PO_Properties.getSPANISH());
 		PO_NavView.checkKey(driver, "users.list", PO_Properties.getSPANISH());
 		PO_NavView.checkKey(driver, "language.change", PO_Properties.getSPANISH());
 		PO_NavView.checkKey(driver, "logout.message", PO_Properties.getSPANISH());
@@ -165,7 +164,6 @@ public class InternationalizationTest {
 		PO_NavView.checkKey(driver, "friendRequest.list", PO_Properties.getENGLISH());
 		PO_NavView.checkKey(driver, "friends.list", PO_Properties.getENGLISH());
 		PO_NavView.clickXPath(driver, "//li[@id=\"users-menu\"]");
-		PO_NavView.checkKey(driver, "users.add", PO_Properties.getENGLISH());
 		PO_NavView.checkKey(driver, "users.list", PO_Properties.getENGLISH());
 		PO_NavView.checkKey(driver, "language.change", PO_Properties.getENGLISH());
 		PO_NavView.checkKey(driver, "logout.message", PO_Properties.getENGLISH());
@@ -185,7 +183,6 @@ public class InternationalizationTest {
 		PO_NavView.checkKey(driver, "friendRequest.list", PO_Properties.getSPANISH());
 		PO_NavView.checkKey(driver, "friends.list", PO_Properties.getSPANISH());
 		PO_NavView.clickXPath(driver, "//li[@id=\"users-menu\"]");
-		PO_NavView.checkKey(driver, "users.add", PO_Properties.getSPANISH());
 		PO_NavView.checkKey(driver, "users.list", PO_Properties.getSPANISH());
 		PO_NavView.checkKey(driver, "language.change", PO_Properties.getSPANISH());
 		PO_NavView.checkKey(driver, "logout.message", PO_Properties.getSPANISH());

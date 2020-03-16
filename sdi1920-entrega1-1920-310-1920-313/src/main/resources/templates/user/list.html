@@ -65,7 +65,7 @@
 							</div>
 						</td>
 						<td sec:authorize="hasRole('ROLE_ADMIN')">
-							<div id="checkboxes">
+							<div class="checkboxes">
 								<label for="checkbox" th:text="#{userList.deleteCheckbox}"></label>
 								<input type="checkbox" th:id="${'checkbox' + user.id}">
 							</div>
@@ -79,7 +79,7 @@
 					/*<![CDATA[*/
 					 $( "#deleteChecked" ).click(function() {
 							var checked = [];
-						$('#checkboxes input').each(function() {
+						$('.checkboxes input').each(function() {
 							if($(this).prop('checked') === true) {
 								var idCheck = $(this).attr('id');
 								checked.push(idCheck.substring(idCheck.length - 1));

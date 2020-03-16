@@ -222,4 +222,8 @@ public class User {
 		return this.role.equals("ROLE_ADMIN");
 	}
 	
+	public void addPublication(Publication publication) {
+		publications.add(publication);
+	}
+	
 }

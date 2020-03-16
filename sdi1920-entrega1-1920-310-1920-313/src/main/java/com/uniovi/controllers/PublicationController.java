@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.uniovi.entities.Publication;
 import com.uniovi.entities.User;
@@ -28,33 +30,34 @@ public class PublicationController {
 
 	@Autowired
 	public PublicationService publicationService;
-	
+
 	@Autowired
 	private UserService usersService;
-	
+
 	@Autowired
 	private CreatePublicationValidator pubValidator;
-	
+
 	@RequestMapping(value = "/publication/add", method = RequestMethod.POST)
-	public String setPublication(@ModelAttribute @Validated Publication publication, BindingResult result) {
+	public String setPublication(@ModelAttribute @Validated Publication publication, BindingResult result,
+			@RequestParam("image") MultipartFile image) {
 		pubValidator.validate(publication, result);
-		if(result.hasErrors())
+		if (result.hasErrors())
 			return "/publication/add";
-		
+
 		Object poster = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String email = "";
 		if (poster instanceof UserDetails)
 			email = ((UserDetails) poster).getUsername();
 		else
 			email = poster.toString();
-		
+
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		Date creationDate = new Date(ts.getTime());
-		
-		publication.setPoster(usersService.getUserByEmail(email));
-		publication.setDate(creationDate);
-		publicationService.addPublication(publication);
-		return "redirect:/publication/list";
+
+		publicationService.addPublication(publication, usersService.getUserByEmail(email), creationDate);
+		publicationService.addImageToPublication(publication, image);
+
+		return "redirect:/user/list";
 	}
 
 	@RequestMapping(value = "/publication/add")
@@ -62,7 +65,7 @@ public class PublicationController {
 		model.addAttribute("publication", new Publication());
 		return "publication/add";
 	}
-	
+
 	@RequestMapping("/publication/list")
 	public String getList(Model model) {
 		Object poster = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -71,27 +74,27 @@ public class PublicationController {
 			email = ((UserDetails) poster).getUsername();
 		else
 			email = poster.toString();
-		
+
 		User user = usersService.getUserByEmail(email);
-		List<Publication> publications = new ArrayList<Publication>();
+		List<Publication> publications = new ArrayList<>();
 		publications = publicationService.getPublicationsForUser(user);
-		
+
 		model.addAttribute("myPublicationsList", publications);
 		return "publication/list";
 	}
-	
+
 	@RequestMapping("/publication/list/{id}")
-	public String getPublicationListOfFriend(Model model, @PathVariable Long id) {
+	public String getPublicationListOfFriend(Model model, @PathVariable Long id) {		
 		User userNotLogged = usersService.getUser(id);
-		if(usersService.areFriends(userNotLogged)) {
+		if (usersService.areFriendsOrIsLogged(userNotLogged)) {
 			List<Publication> publications = new ArrayList<Publication>();
 			publications = publicationService.getPublicationsForUser(userNotLogged);
-			
+
 			model.addAttribute("myPublicationsList", publications);
 			return "publication/list";
 		} else {
-			return "redirect:/user/list";
+			return "redirect:/forbidden";
 		}
 	}
-	
+
 }

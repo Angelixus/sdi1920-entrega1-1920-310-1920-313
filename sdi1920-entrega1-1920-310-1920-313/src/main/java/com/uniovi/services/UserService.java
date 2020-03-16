@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -83,8 +84,14 @@ public class UserService {
 		return users;
 	}	
 	
-	public boolean areFriends(User userA) {
-		return userA.isAlreadyFriend();
+	public boolean areFriendsOrIsLogged(User userA) {
+		Object logged = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String email = "";
+		if (logged instanceof UserDetails)
+			email = ((UserDetails) logged).getUsername();
+		else
+			email = logged.toString();
+		return userA.isAlreadyFriend() || userA.getEmail().equals(email);
 	}
 
 	public void deleteUser(User user) {

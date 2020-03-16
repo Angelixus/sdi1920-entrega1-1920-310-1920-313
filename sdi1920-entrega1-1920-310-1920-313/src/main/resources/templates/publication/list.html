@@ -23,6 +23,9 @@
 							<tr th:each="publication : ${myPublicationsList}">
 								<td th:text="${publication.date}">Date</td>
 								<td th:text="${publication.title}">Titulo</td>
+								<td th:unless="${publication.relativeImagePath.equals('')}">
+									<img th:src="@{${'/' + publication.relativeImagePath}}" style="display: inline-block; max-width: 128px; max-height: 128px;" download/> 
+								</td>
 							</tr>
 						</tbody>
 					</table>

@@ -1,5 +1,9 @@
 package com.uniovi.tests;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.UUID;
 
 import org.junit.After;
@@ -18,7 +22,7 @@ import com.uniovi.tests.pageobjects.PO_RegisterView;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SignUpTest {
-	
+
 	// En Windows (Debe ser la versiÃ³n 65.0.1 y desactivar las actualizacioens
 	// automÃ¡ticas)):
 	static String PathFirefox65 = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
@@ -57,19 +61,46 @@ public class SignUpTest {
 	static public void end() {
 		driver.quit();
 	}
-	
+
 	@Test
 	public void testEnterSignup() {
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
 	}
-	
+
 	// Prueba1
 	@Test
 	public void testValidSignup() {
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
-		PO_RegisterView.fillForm(driver, UUID.randomUUID().toString() + "@uniovi.es", "Pedrin", "Garcia", "123456", "123456");
+		String email = UUID.randomUUID().toString() + "@uniovi.es";
+		PO_RegisterView.fillForm(driver, email, "Pedrin", "Garcia", "123456", "123456");
 		PO_HomeView.checkKey(driver, "welcome.message", PO_Properties.getSPANISH());
+
+		Connection con = null;
+		Statement pst = null;
+
+		try {
+			con = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost", "SA", "");
+			pst = con.createStatement();
+			String query = "DELETE FROM USER u WHERE u.email=\'" + email + "\'";
+			pst.executeUpdate(query);
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} finally {
+			try {
+				pst.close();
+				con.close();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 	}
+
 	// Prueba2
 	@Test
 	public void testInvalidEmptySignup() {
@@ -80,12 +111,12 @@ public class SignUpTest {
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
 		PO_RegisterView.fillForm(driver, "example@uniovi.es", "", "Garcia", "123456", "123456");
 		PO_RegisterView.checkKey(driver, "error.name.empty", PO_Properties.getSPANISH());
-		
+
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
 		PO_RegisterView.fillForm(driver, "example@uniovi.es", "Pedrin", "", "123456", "123456");
 		PO_RegisterView.checkKey(driver, "error.lastName.empty", PO_Properties.getSPANISH());
 	}
-	
+
 	// Prueba3
 	@Test
 	public void testInvalidRepeatedPasswordSignup() {
@@ -93,18 +124,44 @@ public class SignUpTest {
 		PO_RegisterView.fillForm(driver, "example@gmail.com", "Pedrin", "Garcia", "123456", "1234567");
 		PO_RegisterView.checkKey(driver, "error.signup.passwordConfirm.coincidence", PO_Properties.getSPANISH());
 	}
-	
+
 	@Test
 	// Prueba4
 	public void testInvalidExistingEmail() {
 		String uuidTestLocal = UUID.randomUUID().toString();
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
-		PO_RegisterView.fillForm(driver, uuidTestLocal + "@gmail.com", "Pedrin", "Garcia", "123456", "123456");
+		uuidTestLocal = uuidTestLocal + "@gmail.com";
+		PO_RegisterView.fillForm(driver, uuidTestLocal, "Pedrin", "Garcia", "123456", "123456");
 		PO_HomeView.checkKey(driver, "welcome.message", PO_Properties.getSPANISH());
 		PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
-		PO_RegisterView.fillForm(driver, uuidTestLocal + "@gmail.com", "Pedrin", "Garcia", "123456", "123456");
+		PO_RegisterView.fillForm(driver, uuidTestLocal, "Pedrin", "Garcia", "123456", "123456");
 		PO_RegisterView.checkKey(driver, "error.signup.email.duplicate", PO_Properties.getSPANISH());
+		
+		Connection con = null;
+		Statement pst = null;
+
+		try {
+			con = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost", "SA", "");
+			pst = con.createStatement();
+			String query = "DELETE FROM USER u WHERE u.email=\'" + uuidTestLocal + "\'";
+			pst.executeUpdate(query);
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} finally {
+			try {
+				pst.close();
+				con.close();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 	}
 
 }

@@ -22,6 +22,8 @@ public class Publication {
 	@JoinColumn(name = "user_id")
 	private User poster;
 	
+	private String relativeImagePath;
+	
 	public Publication(long id, String title, String text, Date date, User poster) {
 		super();
 		this.id = id;
@@ -29,6 +31,11 @@ public class Publication {
 		this.text = text;
 		this.date = date;
 		this.poster = poster;
+	}
+	
+	public Publication(long id, String title, String text, Date date, User poster, String relativeImagePath) {
+		this(id, title, text, date, poster);
+		this.relativeImagePath = relativeImagePath;
 	}
 	
 	public Publication() {
@@ -73,6 +80,14 @@ public class Publication {
 
 	public void setPoster(User poster) {
 		this.poster = poster;
+	}
+
+	public String getRelativeImagePath() {
+		return relativeImagePath;
+	}
+
+	public void setRelativeImagePath(String relativeImagePath) {
+		this.relativeImagePath = relativeImagePath;
 	}
 
 	
