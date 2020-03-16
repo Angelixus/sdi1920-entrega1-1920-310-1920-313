@@ -2,9 +2,11 @@ package com.uniovi.tests;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,9 +26,9 @@ import com.uniovi.tests.pageobjects.PO_Properties;
 import com.uniovi.tests.pageobjects.PO_View;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class AddPublicationTest {
+public class ListPublicationTest {
 
-	//Alex
+	// Alex
 	static String PathFirefox65 = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
 	static String Geckdriver024 = "C:\\Users\\angel\\git\\repository\\sdi1920-entrega1-1920-310-1920-313\\lib\\geckodriver024win64.exe";
 
@@ -52,6 +54,25 @@ public class AddPublicationTest {
 
 	@BeforeClass
 	static public void begin() {
+		driver.navigate().to(URL);
+
+		PO_PrivateView.fillFormAndCheckKey(driver, "lucio@uniovi.es", "123456", "userList.nextUsers",
+				PO_Properties.getSPANISH());
+
+		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'publications-menu')]/a");
+		elementos.get(0).click();
+		elementos = PO_NavView.checkElement(driver, "free", "//a[contains(@href, 'publication/add')]");
+		elementos.get(0).click();
+
+		PO_AddPublication.fillForm(driver, UUID.randomUUID().toString(), "Texto");
+		elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'publications-menu')]/a");
+		elementos.get(0).click();
+		elementos = PO_NavView.checkElement(driver, "free", "//a[contains(@href, 'publication/add')]");
+		elementos.get(0).click();
+
+		PO_AddPublication.fillForm(driver, UUID.randomUUID().toString(), "Texto");
+		
+		PO_NavView.clickOption(driver, "logout", "class", "btn btn-primary");
 	}
 
 	@AfterClass
@@ -79,37 +100,44 @@ public class AddPublicationTest {
 		}
 		driver.quit();
 	}
-	
-	//Prueba 24
-	@Test
-	public void testValidPublication() {
-		PO_PrivateView.fillFormAndCheckKey(driver, "lucio@uniovi.es", "123456", "userList.nextUsers", PO_Properties.getSPANISH());
-		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'publications-menu')]/a");
-		elementos.get(0).click();
-		elementos = PO_NavView.checkElement(driver, "free", "//a[contains(@href, 'publication/add')]");
-		elementos.get(0).click();
-		
-		PO_AddPublication.fillForm(driver, "Titulo", "Texto");
-		elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'publications-menu')]/a");
-		elementos.get(0).click();
-		elementos = PO_NavView.checkElement(driver, "free", "//a[contains(@href, 'publication/add')]");
-		elementos.get(0).click();
-		PO_View.checkElement(driver, "text", "Titulo");
 
-	}
-	
-	//Prueba 25
 	@Test
-	public void testInvalidPublication() {
-		PO_PrivateView.fillFormAndCheckKey(driver, "lucio@uniovi.es", "123456", "userList.nextUsers", PO_Properties.getSPANISH());
-		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'publications-menu')]/a");
-		elementos.get(0).click();
-		elementos = PO_NavView.checkElement(driver, "free", "//a[contains(@href, 'publication/add')]");
-		elementos.get(0).click();
+	public void testListPublication() {
+		PO_PrivateView.fillFormAndCheckKey(driver, "lucio@uniovi.es", "123456", "userList.nextUsers",
+                PO_Properties.getSPANISH());
+        List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'publications-menu')]/a");
+        elementos.get(0).click();
+        elementos = PO_NavView.checkElement(driver, "free", "//a[contains(@href, 'publication/list')]");
+        elementos.get(0).click();
+        
 		
-		PO_AddPublication.fillForm(driver, "Titulo", "");
-		PO_AddPublication.checkKey(driver, "error.publication.text.empty", PO_Properties.getSPANISH());
-		PO_AddPublication.fillForm(driver, "", "Texto");
-		PO_AddPublication.checkKey(driver, "error.publication.title.empty", PO_Properties.getSPANISH());
+		Connection con = null;
+		Statement st = null;
+		ResultSet rs = null;
+		
+		try {
+			con = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost", "SA", "");
+			st = con.createStatement();
+
+			rs = st.executeQuery("SELECT p.title FROM PUBLICATION p;");
+			while(rs.next()) {
+				String title = rs.getString(1);
+				PO_View.checkElement(driver, "text", title);
+			}
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} finally {
+			try {
+				rs.close();
+				st.close();
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
